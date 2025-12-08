@@ -21,7 +21,7 @@ app.add_middleware(
 async def greet():
     return {"Welcome": "Ticketing system"}
 
-@app.post("/api/event/")
+@app.post("/api/events/")
 async def create_event(event: Event, db: Session = Depends(get_db)):
     new_event = Event_DB(
         event_name=event.event_name,
@@ -40,7 +40,7 @@ async def get_events(db: Session = Depends(get_db)):
     return db.query(Event_DB).all()
 
 
-@app.post("/api/guest")
+@app.post("/api/guests")
 async def create_guest(guest: Guest, db: Session = Depends(get_db)):
     new_guest = Guest_DB(
         guest_name = guest.guest_name,
