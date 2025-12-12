@@ -3,6 +3,7 @@ from app.utils.database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.events.router import router as events_router
 from app.api.guests.router import router as guests_router
+from app.api.auth.router import router as auth_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -18,6 +19,7 @@ app.add_middleware(
 
 app.include_router(events_router)
 app.include_router(guests_router)
+app.include_router(auth_router)
 
 @app.get("/")
 async def greet():

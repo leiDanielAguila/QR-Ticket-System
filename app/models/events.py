@@ -1,5 +1,5 @@
 # database models for events
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String
 from app.utils.database import Base
 from sqlalchemy.orm import relationship
 
