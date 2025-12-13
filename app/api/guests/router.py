@@ -2,23 +2,30 @@
 from fastapi import APIRouter, Depends
 from app.models.guests import Guest_DB
 from app.schemas.guests import Guest
-from services import generate_id
+from app.services import generate_id
 from sqlalchemy.orm import Session
+from typing import Optional
+from pydantic import UUID4
 
 from app.dependencies import get_db
 
 router = APIRouter(prefix="/guests", tags=["Guests"])
 
 @router.get("/")
-async def get_guests(db: Session = Depends(get_db)):
-    return db.query(Guest_DB).all()
+async def get_guests(guest_name: Optional[str] = None ,db: Session = Depends(get_db)):
+
+    if guest_name:
+        guests = db.query(Guest_DB).filter(Guest_DB.guest_name == guest_name).all()
+        return guests
+    else:
+        return db.query(Guest_DB).all()
 
 
 @router.post("/")
 async def create_guest(guest: Guest, db: Session = Depends(get_db)):
     guest_id = generate_id()
 
-    new_guest = Guest_DB(
+    new_guest = Guest_DB( 
         id = guest_id,
         guest_name = guest.guest_name,
         email = guest.email,
@@ -28,3 +35,17 @@ async def create_guest(guest: Guest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_guest)
     return new_guest
+
+
+@router.delete("/{guest_id}")
+async def delete_guest(guest_id: UUID4, db: Session = Depends(get_db)):
+    guest = db.query(Guest_DB).filter(Guest_DB.id == guest_id).first()
+
+    if not guest:
+        return {"error" : "No guest with this information found"}
+    
+
+    db.delete(guest)
+    db.commit()
+
+    return {"Message" : "Guest Removed"}
