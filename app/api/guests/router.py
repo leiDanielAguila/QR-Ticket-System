@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends
 from app.models.guests import Guest_DB
 from app.schemas.guests import Guest
-from app.api.guests.services import generate_id
+from app.services import generate_id
 from sqlalchemy.orm import Session
 from typing import Optional
 from pydantic import UUID4
