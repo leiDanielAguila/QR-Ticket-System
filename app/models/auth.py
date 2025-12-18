@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 
 class User_DB(Base):
     __tablename__ = "users"
-    id = Column(Integer, index=True, primary_key=True)
+    id = Column(String , index=True, primary_key=True)
     password = Column(String, index=True)
     
     organizer = relationship("Organizer_DB", back_populates="user", uselist=False)

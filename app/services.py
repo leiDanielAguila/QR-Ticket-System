@@ -1,11 +1,14 @@
 import uuid
 
-def generate_id() -> uuid:
+def generate_id() -> str:
     """
     Generate unique identifier using uuid version 4 
     
     return: 
         UUID V4
     """
-    return uuid.uuid4()
+
+    user_id = uuid.uuid4()
+
+    return str(user_id)
 

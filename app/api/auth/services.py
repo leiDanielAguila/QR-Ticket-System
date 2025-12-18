@@ -3,9 +3,34 @@ from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 from app.models.organizers import Organizer_DB
 from sqlalchemy import Exists
+from datetime import datetime, timedelta, timezone
+from dotenv import load_dotenv
+from app.schemas.organizers import Organizers
+import jwt
+import os
+
+load_dotenv()
 
 def password_validation(password: str):
-    """ Check if the submitted password is valid """
+    """ Check if the submitted password follows the password policy """
+    pass
+
+def create_token(u: Organizers):
+    user_name = u.first_name + " " + u.last_name
+
+    payload = {
+        "sub" : user_name,
+        "exp" : datetime.now(timezone.utc) + timedelta(minutes=5)
+    }
+
+    secret_key = os.getenv("JWT_SECRET_KEY")
+
+    token = jwt.encode(payload=payload, key=secret_key, algorithm="HS256")
+
+    return token
+
+
+def validate_token(token: str):
     pass
 
 
@@ -17,20 +42,13 @@ def check_user_exists(email: str, db: Session) -> bool:
     
 
 def get_password_hash(password: str) -> str:
-    """ 
-    Get string password, convert to bcrypt hash, returns a hashed password
-
-    args:
-        password: String  
-    returns:
-        hashed password 
-    example:
-        >>> password = "password123"
-        >>> get_password_hash(password)
-        '$2b$13$HMQTprwhaUwmir.g.ZYoXuRJhtsbra4uj.qJPHrKsX5nGlhpts0jm'            
     """
-    if password:
-        return bcrypt.hash(password)
+    returns an encrypted password using bcrypt
+
+    """
+
+    return bcrypt.hash(password)
+
     
     
 def verify_password(input_password: str, stored_password: str) -> bool:
